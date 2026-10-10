@@ -1,0 +1,23 @@
+{
+	"format": 1,
+	"id": "dev.hazel.change-endpoint",
+	"name": "ChangeEndpoint",
+	"description": "Connects Discord to a Spacebar instance instead of Discord's servers.",
+	"author": "Hazel Rane",
+	"version": "0.6.1",
+	"dependencies": {
+		"revenge.api": {
+			"version": ">=1 <2"
+		},
+		"discord": {
+			"version": "*"
+		}
+	},
+	"dist": {
+		"script": "index.js",
+		"android": {
+			"path": "plugin.jar",
+			"class": "dev.hazel.changeendpoint.Voice"
+		}
+	}
+}
