@@ -1,0 +1,53 @@
+{
+  "format": 1,
+  "name": "ChangeEndpoint",
+  "description": "Spacebar instance support for Revenge.",
+  "plugins": {
+    "dev.hazel.change-endpoint": {
+      "name": "ChangeEndpoint",
+      "description": "Connects Discord to a Spacebar instance instead of Discord's servers.",
+      "author": "Hazel Rane",
+      "channels": {
+        "latest": "0.6.1"
+      },
+      "versions": {
+        "0.6.1": {
+          "url": "https://meownyaaa.github.io/Revenge-ChangeEndpoint/pool/dev.hazel.change-endpoint@0.6.1.zip",
+          "sha256": "f20b174ecbdd1a1fc4bfa029f5f2e62a26f51717e72f18d73ba12aaecf70972f",
+          "size": 27687,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    },
+    "dev.hazel.devtools-bridge": {
+      "name": "DevTools Bridge",
+      "description": "Connects to a Revenge DevTools server on localhost:7864 for live debugging. Development only.",
+      "author": "Hazel Rane",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://meownyaaa.github.io/Revenge-ChangeEndpoint/pool/dev.hazel.devtools-bridge@1.0.0.zip",
+          "sha256": "23ee0c0f997b72ac13356066b18fd566c0cd1a3bb1b1ef5cf6585b5256cc6682",
+          "size": 16770,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    }
+  }
+}
