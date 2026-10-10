@@ -14,6 +14,7 @@ concurrency:
 
 permissions:
   contents: write
+  packages: read
 
 env:
   # Branch holding the pool. Set the POOL_BRANCH repository variable to move it.
@@ -50,7 +51,7 @@ jobs:
         if: steps.plan.outputs.count != '0'
         run: ./gradlew --no-daemon packageAllPlugins
         env:
-          GITHUB_TOKEN: ${{ secrets.READ_PACKAGES_TOKEN }} # For Gradle to download the API dependency.
+          GITHUB_TOKEN: ${{ secrets.READ_PACKAGES_TOKEN || github.token }} # For Gradle to download the API dependency.
 
       - name: Publish to the pool
         if: steps.plan.outputs.count != '0'
