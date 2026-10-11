@@ -10,6 +10,7 @@ import { patchChannelIconEditor } from './channelIconEditor'
 import { patchChannelIcons } from './channelIcons'
 import { patchMessageMembers } from './members'
 import { patchNetwork } from './network'
+import { patchInvites } from './invites'
 import { patchPermissions } from './permissions'
 import { patchRoleColors } from './roles'
 import Settings from './Settings'
@@ -32,6 +33,7 @@ export default plugin({
 		patchVoice(cleanup)
 		patchRoleColors(cleanup)
 		patchPermissions(cleanup)
+		patchInvites(cleanup)
 		patchMessageMembers(cleanup)
 		patchChannelIcons(cleanup)
 		patchBoosts(cleanup)

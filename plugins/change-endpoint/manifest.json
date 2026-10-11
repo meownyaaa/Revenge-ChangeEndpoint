@@ -4,7 +4,7 @@
 	"name": "ChangeEndpoint",
 	"description": "Connects Discord to a Spacebar instance instead of Discord's servers.",
 	"author": "Hazel Rane",
-	"version": "0.7.6",
+	"version": "0.7.8",
 	"dependencies": {
 		"revenge.api": {
 			"version": ">=1 <2"
