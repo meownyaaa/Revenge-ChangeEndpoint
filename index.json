@@ -8,7 +8,7 @@
       "description": "Connects Discord to a Spacebar instance instead of Discord's servers.",
       "author": "Hazel Rane",
       "channels": {
-        "latest": "0.7.8"
+        "latest": "0.7.9"
       },
       "versions": {
         "0.6.1": {
@@ -41,6 +41,19 @@
           "url": "https://meownyaaa.github.io/Revenge-ChangeEndpoint/pool/dev.hazel.change-endpoint@0.7.8.zip",
           "sha256": "b9d19d2aec7f1d34fa5aeece9d33918efc956b174883c26f9643a3ed7b1b2db7",
           "size": 31348,
+          "dependencies": {
+            "revenge.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        },
+        "0.7.9": {
+          "url": "https://meownyaaa.github.io/Revenge-ChangeEndpoint/pool/dev.hazel.change-endpoint@0.7.9.zip",
+          "sha256": "94058fc908bdb6782638f220779adc131d9eba62ce4963c22a78943617f21122",
+          "size": 31411,
           "dependencies": {
             "revenge.api": {
               "version": ">=1 <2"
