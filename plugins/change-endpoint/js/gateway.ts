@@ -33,6 +33,12 @@ export function patchGateway(cleanup: Cleanup) {
 				instead(Object.getPrototypeOf(socket.compressionHandler), 'getAlgorithm', function (args, getAlgorithm) {
 					return state.endpoints ? '' : getAlgorithm.apply(this, args)
 				}),
+				// spacebar's stream delete sends a voice state whose member has no user, Discord throws on it and resets the gateway
+				instead(Object.getPrototypeOf(socket), '_handleDispatch', function (args, handleDispatch) {
+					const [data, type] = args as [any, string]
+					if (state.endpoints && type === 'VOICE_STATE_UPDATE' && data?.member && !data.member.user) delete data.member
+					return handleDispatch.apply(this, args)
+				}),
 				onInstanceChange(() => {
 					socket.resumeUrl = null
 				}),

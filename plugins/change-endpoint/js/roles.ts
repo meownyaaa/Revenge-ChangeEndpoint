@@ -32,6 +32,14 @@ type RoleIconData = { customIconSrc?: string; unicodeEmoji?: unknown } | null | 
 
 export function patchRoleColors(cleanup: Cleanup) {
 	cleanup(
+		// Discord hides activities it can't verify, which is every activity on a custom server
+		getStore<{ getUnfilteredActivities(...args: unknown[]): unknown }>('PresenceStore', store => {
+			cleanup(
+				instead(Object.getPrototypeOf(store), 'getActivities', function (args, original) {
+					return state.endpoints ? (this as typeof store).getUnfilteredActivities(...args) : original.apply(this, args)
+				}),
+			)
+		}),
 		// spacebar sends icon "" on emoji roles, Discord then builds a broken image url and skips the emoji
 		getModules(withProps<{ getRoleIconData(role: { icon?: string | null }, size: number): RoleIconData; canGuildUseRoleIcons: unknown }>('getRoleIconData', 'canGuildUseRoleIcons'), mod => {
 			cleanup(

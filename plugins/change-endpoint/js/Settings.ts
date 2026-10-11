@@ -103,6 +103,8 @@ function ServerEditor({ server, onDone }: { server?: Server; onDone(saved?: Serv
 export default function Settings() {
 	const [instance, setInstance] = useState(currentInstance)
 	const [multiAccount, setMultiAccount] = useState(state.config.multiAccount)
+	const [disrespect, setDisrespect] = useState(state.config.disrespectPermissions)
+	const [boostCount, setBoostCount] = useState(String(state.config.boostCount))
 	const [editing, setEditing] = useState<Server | 'new' | null>(null)
 	// editing the selected server's endpoints needs a restart too
 	const [currentEdited, setCurrentEdited] = useState(false)
@@ -175,6 +177,34 @@ export default function Settings() {
 				],
 			}),
 		h(Design.Button, { text: 'Apply and restart', disabled: !changed, onPress: apply }),
+		h(Design.TableRowGroup, {
+			title: 'Behaviour',
+			children: [
+				h(Design.TableSwitchRow, {
+					key: 'disrespect-permissions',
+					label: 'Disrespect permissions',
+					subLabel: "Ignore permissions that Spacebar servers don't enforce. For now this lets you send and forward stickers from other guilds without the Use External Stickers permission.",
+					value: disrespect,
+					onValueChange: (value: boolean) => {
+						setDisrespect(value)
+						state.config = { ...state.config, disrespectPermissions: value }
+						storage.set({ disrespectPermissions: value })
+					},
+				}),
+			],
+		}),
+		h(Design.TextInput, {
+			label: 'Boost count',
+			description: 'How many boosts every guild shows. The boost level follows from it like on Discord (2, 7 and 14 boosts), and 14 or more unlocks all boost perks. Restart to apply.',
+			defaultValue: boostCount,
+			...{ keyboardType: 'number-pad' },
+			onChange: (text: string) => {
+				setBoostCount(text)
+				if (!/^\d+$/.test(text)) return
+				state.config = { ...state.config, boostCount: Number(text) }
+				storage.set({ boostCount: Number(text) })
+			},
+		}),
 		h(Design.TableRowGroup, {
 			title: 'Accounts',
 			children: [

@@ -5,7 +5,12 @@ import { patchLogin } from './login'
 import { patchGateway } from './gateway'
 import { syncNativeHosts } from './hosts'
 import { patchEmojiRows, patchReactions, patchStickers } from './media'
+import { loadInstanceLimits, patchBoosts } from './boosts'
+import { patchChannelIconEditor } from './channelIconEditor'
+import { patchChannelIcons } from './channelIcons'
+import { patchMessageMembers } from './members'
 import { patchNetwork } from './network'
+import { patchPermissions } from './permissions'
 import { patchRoleColors } from './roles'
 import Settings from './Settings'
 import { patchVoice } from './voice'
@@ -26,12 +31,18 @@ export default plugin({
 		patchLogin(cleanup)
 		patchVoice(cleanup)
 		patchRoleColors(cleanup)
+		patchPermissions(cleanup)
+		patchMessageMembers(cleanup)
+		patchChannelIcons(cleanup)
+		patchBoosts(cleanup)
+		patchChannelIconEditor(cleanup)
 	},
 
 	start({ cleanup }) {
 		// persists a migrated single custom server as a list entry
 		saveCustoms(state.config.customs)
 		syncNativeHosts()
+		loadInstanceLimits()
 		patchStickers(cleanup)
 		patchEmojiRows(cleanup)
 

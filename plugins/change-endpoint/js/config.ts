@@ -30,6 +30,9 @@ export interface Config {
 	instance: string | null
 	customs: Server[]
 	multiAccount: boolean
+	disrespectPermissions: boolean
+	channelIcons: Record<string, Record<string, string>>
+	boostCount: number
 	hostsOverridden: boolean
 	accounts: Record<string, string>
 }
@@ -38,6 +41,9 @@ const DEFAULT_CONFIG: Config = {
 	instance: null,
 	customs: [],
 	multiAccount: true,
+	disrespectPermissions: true,
+	channelIcons: {},
+	boostCount: 67,
 	hostsOverridden: false,
 	accounts: {},
 }
@@ -56,7 +62,7 @@ export function readConfigSync(): Config {
 		if (saved.custom?.host && !customs.some(s => s.id === 'custom'))
 			customs.unshift({ id: 'custom', name: simplifyHost(saved.custom.host), ...saved.custom })
 		const { custom: _, ...rest } = saved
-		return { ...DEFAULT_CONFIG, ...rest, customs, accounts: { ...saved.accounts } }
+		return { ...DEFAULT_CONFIG, ...rest, customs, accounts: { ...saved.accounts }, channelIcons: { ...saved.channelIcons } }
 	} catch {
 		return DEFAULT_CONFIG
 	}
