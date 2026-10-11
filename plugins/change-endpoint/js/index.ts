@@ -3,6 +3,7 @@ import { patchAccounts } from './accounts'
 import { installGlobalEnv } from './env'
 import { patchLogin } from './login'
 import { patchGateway } from './gateway'
+import { patchGifs } from './gifs'
 import { syncNativeHosts } from './hosts'
 import { patchEmojiRows, patchReactions, patchStickers } from './media'
 import { loadInstanceLimits, patchBoosts } from './boosts'
@@ -28,6 +29,7 @@ export default plugin({
 		cleanup(patchNetwork(where => console.warn(`[ChangeEndpoint] Blocked a request carrying another server's token: ${where}`)))
 		patchGateway(cleanup)
 		patchReactions(cleanup)
+		patchGifs(cleanup)
 		patchAccounts(cleanup)
 		patchLogin(cleanup)
 		patchVoice(cleanup)
