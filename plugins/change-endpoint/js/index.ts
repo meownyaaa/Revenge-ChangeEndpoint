@@ -9,6 +9,7 @@ import { patchEmojiRows, patchReactions, patchStickers } from './media'
 import { loadInstanceLimits, patchBoosts } from './boosts'
 import { patchChannelIconEditor } from './channelIconEditor'
 import { patchChannelIcons } from './channelIcons'
+import { patchDecorations } from './decorations'
 import { patchMessageMembers } from './members'
 import { patchNetwork } from './network'
 import { patchInvites } from './invites'
@@ -34,6 +35,7 @@ export default plugin({
 		patchLogin(cleanup)
 		patchVoice(cleanup)
 		patchRoleColors(cleanup)
+		patchDecorations(cleanup)
 		patchPermissions(cleanup)
 		patchInvites(cleanup)
 		patchMessageMembers(cleanup)
