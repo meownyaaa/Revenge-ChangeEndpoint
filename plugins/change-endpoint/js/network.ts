@@ -64,6 +64,9 @@ export function isTokenAllowed(token: string | null | undefined, url: string) {
 
 const MESSAGE_SEND = /^(POST|PATCH) .*\/channels\/\d+\/messages(\/\d+)?$/
 const GUILD_EDIT = /^PATCH .*\/guilds\/(\d+)$/
+const USER_EDIT = /^PATCH .*\/users\/@me$/
+// spacebar rejects the whole edit over fields it doesn't know
+const UNKNOWN_USER_FIELDS = /^(avatar_description|push_\w+)$/
 
 function cleanGuildEdit(guildId: string, body: string) {
 	const json = JSON.parse(body)
@@ -115,6 +118,11 @@ export function patchNetwork(onBlocked: (where: string) => void) {
 			const [body] = args
 			const guildId = req && typeof body === 'string' && isCurrentInstanceUrl(req.url) ? req.tag.match(GUILD_EDIT)?.[1] : undefined
 			if (guildId) return send.call(xhr, cleanGuildEdit(guildId, body))
+			if (req && typeof body === 'string' && USER_EDIT.test(req.tag) && isCurrentInstanceUrl(req.url)) {
+				const json = JSON.parse(body)
+				for (const key of Object.keys(json)) if (UNKNOWN_USER_FIELDS.test(key)) delete json[key]
+				return send.call(xhr, JSON.stringify(json))
+			}
 			if (req && typeof body === 'string' && MESSAGE_SEND.test(req.tag) && isCurrentInstanceUrl(req.url) && /signal_strength|mobile_network_type/.test(body)) {
 				const json = JSON.parse(body)
 				delete json.signal_strength
