@@ -12,18 +12,32 @@ const BOOST_FEATURES = [
 	'MORE_EMOJI', 'MORE_STICKERS', 'MORE_SOUNDBOARD', 'ROLE_ICONS', 'ROLE_SUBSCRIPTIONS_ENABLED',
 ]
 
-const limits = { maxEmojis: 2000, maxStickers: 500 }
+const limits = { maxEmojis: 2000, maxStickers: 500, maxBio: 190, maxPronouns: 40 }
+const LENGTH_CONSTANTS = ['BIO_MAX_LENGTH', 'BIO_MAX_LENGTH_INCREASED', 'PRONOUNS_MAX_LENGTH'] as const
+type LengthConstants = Record<(typeof LENGTH_CONSTANTS)[number], number>
+let lengthConstants: LengthConstants | undefined
+let discordLengths: LengthConstants | undefined
+
+function applyLengthLimits() {
+	if (!lengthConstants) return
+	discordLengths ??= { ...lengthConstants }
+	for (const key of LENGTH_CONSTANTS)
+		lengthConstants[key] = !state.endpoints ? discordLengths[key] : key === 'PRONOUNS_MAX_LENGTH' ? limits.maxPronouns : limits.maxBio
+}
 
 async function loadLimits() {
-	if (!state.endpoints) return
+	if (!state.endpoints) return applyLengthLimits()
 	try {
 		const http = lookupModule(withProps<{ get(options: { url: string }): Promise<{ body: any }>; post: unknown; put: unknown; patch: unknown; del: unknown; V8APIError: unknown }>('get', 'post', 'put', 'patch', 'del', 'V8APIError'))[0]
 		const { body } = await http!.get({ url: '/policies/instance/limits' })
 		limits.maxEmojis = body?.guild?.maxEmojis ?? limits.maxEmojis
 		limits.maxStickers = body?.guild?.maxStickers ?? limits.maxStickers
+		limits.maxBio = body?.user?.maxBio ?? limits.maxBio
+		limits.maxPronouns = body?.user?.maxPronouns ?? limits.maxPronouns
 	} catch (e) {
 		console.warn("[ChangeEndpoint] couldn't load instance limits, using Spacebar's defaults", e)
 	}
+	applyLengthLimits()
 }
 
 function boostPerks() {
@@ -108,6 +122,27 @@ export function patchBoosts(cleanup: Cleanup) {
 						return state.endpoints && args[0] === 3
 							? Math.max(0, limits.maxStickers - incremental(0) - incremental(1) - incremental(2))
 							: original.apply(this, args)
+					}),
+				)
+			},
+		),
+		getModules(withProps<LengthConstants>('PRONOUNS_MAX_LENGTH', 'BIO_MAX_LENGTH'), constants => {
+			lengthConstants = constants
+			applyLengthLimits()
+			cleanup(() => {
+				if (discordLengths) Object.assign(constants, discordLengths)
+			})
+		}),
+		getModules(
+			withProps<{ useBioMaxLength(...args: unknown[]): number; getBioMaxLength(...args: unknown[]): number }>('useBioMaxLength', 'getBioMaxLength'),
+			bio => {
+				cleanup(
+					instead(bio, 'useBioMaxLength', function (args, original) {
+						const max = original.apply(this, args)
+						return state.endpoints ? limits.maxBio : max
+					}),
+					instead(bio, 'getBioMaxLength', function (args, original) {
+						return state.endpoints ? limits.maxBio : original.apply(this, args)
 					}),
 				)
 			},
